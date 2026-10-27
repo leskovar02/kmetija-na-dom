@@ -1,0 +1,35 @@
+---
+status: sprejeto
+datum: 27-10-2026
+---
+
+# Uporaba HTML5, CSS in predlog Jinja za uporabniški vmesnik
+
+## Kontekst in problem
+Za spletno aplikacijo moramo izbrati način izrisovanja uporabniškega vmesnika ter prikazovanja dinamičnih podatkov iz strežnika.
+
+## Dejavniki odločanja
+* Hitrost in enostavnost razvoja uporabniškega vmesnika
+* Prvič uporaba ogrodja za razvoj
+* Izogibanje kompleksnosti ogrodij
+* Strežniško upodabljanje
+* Izogibanje JavaScriptu
+
+## Obravnavane možnosti
+* HTML5, CSS in Jinja predloge
+* Raw HTML5, CSS, Js
+
+## Sprejeta odločitev in utemeljitev
+Izbrana opcija: "HTML5, CSS in Jinja predloge", ker omogoča neposredno vključevanje Python spremenljivk ter logike (zanke, pogoji) v standardne HTML dokumente. Z vidika spletnega razvoja to pomeni, da strežnik sestavi celotno HTML stran in jo pošlje brskalniku, kar odpravlja potrebo po upravljanju ločenih stanjskih ogrodij na strani odjemalca.
+
+Kot nekdo, ki dela svojo prvo spletno aplikacijo z ogrodjem, je uporaba predlog Jinja optimalna. Ker poznam le surov HTML in CSS, mi ni bilo treba vzporedno študirati še celotnega frontend ogrodja (npr. React), ampak lahko takoj začnem prikazovati podatke iz baze.
+
+### Pozitivne posledice
+* Lažja učna krivulja in hiter začetni napredek pri razvoju
+* Zmanjšana kompleksnost arhitekture, saj nimamo ločenega spletnega odjemalca in API-ja.
+* Enostavno deljenje HTML kode na večkrat uporabne komponente (npr. glava, noga, navigacija) z uporabo dedovanja predlog (`{% extends %}`).
+
+### Negativne posledice
+* Ob vsaki interakciji ali oddaji obrazca se stran ponovno osveži
+* Manj gladka uporabniška izkušnja v primerjavi s sodobnimi enostranskimi aplikacijami
+* Večja poraba pasovne širine, saj strežnik ob vsaki zahtevi pošilja celotno HTML kodo namesto le dinamičnih podatkov
