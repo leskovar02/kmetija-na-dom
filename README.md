@@ -12,4 +12,4 @@ Namen aplikacije je omogočanje kupcem nakupa sveže, doma pridelane hrane, ki n
 
 HTML5, CSS, Jinja, Python (+ venv), Flask (+ Flash-Session), PostgreSQL, Docker, Git
 
-### Dokumentacija
+### Dokumentacija 
