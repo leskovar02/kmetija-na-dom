@@ -10,14 +10,13 @@ Za spletno aplikacijo moramo izbrati način izrisovanja uporabniškega vmesnika 
 
 ## Dejavniki odločanja
 * Hitrost in enostavnost razvoja uporabniškega vmesnika
-* Prvič uporaba ogrodja za razvoj
-* Izogibanje kompleksnosti ogrodij
+* Izogibanje kompleksnosti
 * Strežniško upodabljanje
-* Izogibanje JavaScriptu
 
 ## Obravnavane možnosti
-* HTML5, CSS in Jinja predloge
+* HTML5, CSS in Jinja
 * Raw HTML5, CSS, Js
+* React
 
 ## Sprejeta odločitev in utemeljitev
 Izbrana opcija: "HTML5, CSS in Jinja predloge", ker omogoča neposredno vključevanje Python spremenljivk ter logike (zanke, pogoji) v standardne HTML dokumente. Z vidika spletnega razvoja to pomeni, da strežnik sestavi celotno HTML stran in jo pošlje brskalniku, kar odpravlja potrebo po upravljanju ločenih stanjskih ogrodij na strani odjemalca.
@@ -27,7 +26,7 @@ Kot nekdo, ki dela svojo prvo spletno aplikacijo z ogrodjem, je uporaba predlog 
 ### Pozitivne posledice
 * Lažja učna krivulja in hiter začetni napredek pri razvoju
 * Zmanjšana kompleksnost arhitekture, saj nimamo ločenega spletnega odjemalca in API-ja.
-* Enostavno deljenje HTML kode na večkrat uporabne komponente (npr. glava, noga, navigacija) z uporabo dedovanja predlog (`{% extends %}`).
+* Enostavno deljenje HTML kode na večkrat uporabne komponente (npr. glava, noga, navigacija) z uporabo dedovanja (`{% extends %}`).
 
 ### Negativne posledice
 * Ob vsaki interakciji ali oddaji obrazca se stran ponovno osveži
