@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # POSTGES
+  db:
+    image: postgres:15-alpine
+    container_name: kmetija_db
+    restart: always
+    environment:
+      POSTGRES_USER: user_kmetija
+      POSTGRES_PASSWORD: geslo_kmetija
+      POSTGRES_DB: kmetija_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # FLASK
+  backend:
+    build: ./backend
+    container_name: kmetija_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://user_kmetija:geslo_kmetija@db:5432/kmetija_db
+    depends_on:
+      - db
+
+  # WEBAPP
+  frontend:
+    build: ./frontend
+    container_name: kmetija_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
