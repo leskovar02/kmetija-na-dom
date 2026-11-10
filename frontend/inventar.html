@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Inventar - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <a href="/odjava">Odjava</a>
+            </nav>
+        </header>
+
+        <div class="postavitev">
+            <nav class="stranski-meni">
+                <h2>Moja kmetija</h2>
+                <ul>
+                    <li><a href="/kmetije/{{ current_user.kmetija.id }}">Javni profil</a></li>
+                    <li><a href="/inventar">Inventar</a></li>
+                    <li><a href="/kmetovalec/narocila">Naročila</a></li>
+                </ul>
+            </nav>
+
+            <main class="vsebina">
+                <div class="vsebina-glava">
+                    <h2>Inventar</h2>
+                    <form action="/inventar/nov" method="get">
+                        <button type="submit">Dodaj izdelek</button>
+                    </form>
+                </div>
+
+                {% with sporocila = get_flashed_messages() %}
+                {% if sporocila %}
+                <div class="sporocilo">
+                    {% for sporocilo in sporocila %}
+                    <p>{{ sporocilo }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <div class="tabela-okvir">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Slika</th>
+                                <th>Izdelek</th>
+                                <th>Kategorija</th>
+                                <th>Cena / enota</th>
+                                <th>Trenutna zaloga</th>
+                                <th>Dejanja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for izdelek in izdelki %}
+                            <tr>
+                                <td><img src="/slike/{{ izdelek.slika }}" alt="{{ izdelek.naziv }}" width="64" height="64"></td>
+                                <td>{{ izdelek.naziv }}</td>
+                                <td>{{ KATEGORIJE_IMENA[izdelek.kategorija] }}</td>
+                                <td>{{ izdelek.cena|evro }} € / {{ izdelek.enota }}</td>
+                                <td>{{ izdelek.zaloga|kolicina }} {{ izdelek.enota }}</td>
+                                <td>
+                                    <div class="dejanja">
+                                        <a href="/inventar/{{ izdelek.id }}/uredi">Uredi</a>
+                                        <a href="/inventar/{{ izdelek.id }}/izbrisi">Izbriši</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6">Kmetija še nima izdelkov.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

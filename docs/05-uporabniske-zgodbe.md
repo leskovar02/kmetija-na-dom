@@ -59,23 +59,23 @@
 
 2) Sistem ob oddaji naročila preveri razpoložljivo zalogo in zavrne naročilo, če naročena količina presega trenutno zalogo izdelka.
 
-3) Uspešno oddano naročilo se shrani v podatkovno bazo z začetnim statusom ob uri oddaje naročila ter se poveže s kupcem in kmetijo.
+3) Uspešno oddano naročilo se shrani v podatkovno bazo z začetnim statusom "čaka na potrditev" in časom oddaje naročila ter se poveže s kupcem in kmetijo.
 
 4) Kupec po oddaji naročila vidi potrditveni zaslon s povzetkom naročila in podatki o prevzemu.
 
 
 ## US-05
 
-**Povezana funkcionalnost:** Pregled in spreminjanje statusa naročil s strani kmetovalca (potrjeno, v pripravi, za prevzem, zaprto)
+**Povezana funkcionalnost:** Pregled in spreminjanje statusa naročil s strani kmetovalca (čaka na potrditev → potrjeno / zavrnjeno → v pripravi → za prevzem → zaprto)
 
 **Uporabniška vloga:** Kmetovalec
 
-**Uporabniška zgodba:** Kot kmetovalec želim pregledovati in spreminjati status prejetih naročil (potrjeno, v pripravi, za prevzem, zaprto), da kupca in sebe vodim skozi proces priprave.
+**Uporabniška zgodba:** Kot kmetovalec želim pregledovati in spreminjati status prejetih naročil (čaka na potrditev → potrjeno / zavrnjeno → v pripravi → za prevzem → zaprto), da kupca in sebe vodim skozi proces priprave.
 
 **Acceptance criteria:**
 1) Kmetovalec ima pregled nad vsemi prejetimi naročili z navedenimi podrobnostmi o naročenih izdelkih in kupcu.
 
-2) Kmetovalec lahko posodobi status naročila na enega od dovoljenih stanj: potrjeno, v pripravi, za prevzem ali zaprto.
+2) Kmetovalec lahko posodobi status naročila izključno po dovoljenem poteku: naročilo v stanju "čaka na potrditev" potrdi ("potrjeno") ali zavrne ("zavrnjeno"), potrjeno naročilo nato premika skozi "v pripravi" in "za prevzem" do "zaprto". "Zavrnjeno" in "zaprto" sta končni stanji.
 
 3) Sprememba statusa se nemudoma shrani v podatkovno bazo in se osveži v vmesniku.
 
@@ -93,7 +93,7 @@
 **Acceptance criteria:**
 1) Kupec lahko odda oceno (številčna vrednost od 1 do 5) in besedilni komentar za kmetijo šele, ko je status naročila nastavljen na "zaprto" in je od le-tega preteklo 24 ur.
 
-2) istem prepreči oddajo več ocen za isto zaključeno naročilo s strani istega kupca.
+2) Sistem prepreči oddajo več ocen za isto zaprto naročilo s strani istega kupca.
 
 2) Povprečna ocena kmetije se samodejno izračuna na podlagi vseh oddanih ocen in se prikaže na profilu kmetije.
 
@@ -141,7 +141,7 @@
 **Uporabniška zgodba:** Kot kupec želim prejeti avtomatsko e-poštno obvestilo ob spremembi statusa mojega naročila, da sem vedno obveščen o napredku priprave.
 
 **Acceptance criteria:**
-1) Sistem samodejno pošlje e-poštno sporočilo kupcu takoj, ko kmetovalec spremeni status naročila (npr. v "potrjeno/zavrnjeno", "v pripravi" ali "za prevzem").
+1) Sistem samodejno pošlje e-poštno sporočilo kupcu takoj, ko kmetovalec spremeni status naročila (v "potrjeno", "zavrnjeno", "v pripravi", "za prevzem" ali "zaprto").
 
 2) E-poštno sporočilo vsebuje ID naročila, trenutni status in osnovna navodila za prevzem.
 

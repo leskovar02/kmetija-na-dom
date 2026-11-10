@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Izbriši izdelek - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <a href="/odjava">Odjava</a>
+            </nav>
+        </header>
+
+        <div class="postavitev">
+            <nav class="stranski-meni">
+                <h2>Moja kmetija</h2>
+                <ul>
+                    <li><a href="/kmetije/{{ current_user.kmetija.id }}">Javni profil</a></li>
+                    <li><a href="/inventar">Inventar</a></li>
+                    <li><a href="/kmetovalec/narocila">Naročila</a></li>
+                </ul>
+            </nav>
+
+            <main class="vsebina">
+                <div class="potrditev-okvir">
+                    <h2>Izbriši izdelek</h2>
+
+                    <p>Ali res želite izbrisati izdelek <strong>{{ izdelek.naziv }}</strong>?</p>
+                    <p>Izdelek bo odstranjen iz ponudbe za kupce. Pretekla naročila ostanejo ohranjena.</p>
+
+                    <div class="gumbi">
+                        <form action="/inventar/{{ izdelek.id }}/izbrisi" method="post">
+                            <button type="submit">Izbriši</button>
+                        </form>
+
+                        <form action="/inventar" method="get">
+                            <button type="submit">Prekliči</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

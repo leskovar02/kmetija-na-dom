@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>{{ izdelek.naziv }} - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            <div class="izdelek-glava">
+                <h2>{{ izdelek.naziv }}</h2>
+                <a href="/izdelki">Nazaj na katalog</a>
+            </div>
+
+            {% with sporocila = get_flashed_messages() %}
+            {% if sporocila %}
+            <div class="sporocilo">
+                {% for sporocilo in sporocila %}
+                <p>{{ sporocilo }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <div class="izdelek-postavitev">
+                <section class="izdelek-podatki">
+                    <img src="/slike/{{ izdelek.slika }}" alt="{{ izdelek.naziv }}" width="400" height="300">
+
+                    <div class="opis-okvir">
+                        <h3>Opis izdelka</h3>
+                        <p>{{ izdelek.opis }}</p>
+                        <dl>
+                            <dt>Kategorija</dt>
+                            <dd>{{ KATEGORIJE_IMENA[izdelek.kategorija] }}</dd>
+                            <dt>Enota</dt>
+                            <dd>{{ izdelek.enota }}</dd>
+                        </dl>
+                    </div>
+                </section>
+
+                <aside class="nakup-stolpec">
+                    <div class="nakup-okvir">
+                        <h3>Nakup izdelka</h3>
+                        <p class="cena">{{ izdelek.cena|evro }} € / {{ izdelek.enota }}</p>
+                        <p class="zaloga">Trenutna zaloga: {{ izdelek.zaloga|kolicina }} {{ izdelek.enota }}</p>
+
+                        {% if current_user.vloga == "kupec" and izdelek.zaloga > 0 %}
+                        <form id="dodaj-v-kosarico" action="/kosarica/dodaj" method="post">
+                            <input type="hidden" name="izdelek_id" value="{{ izdelek.id }}">
+
+                            <div class="polje">
+                                <label for="kolicina">Količina ({{ izdelek.enota }})</label>
+                                <input type="number" id="kolicina" name="kolicina"
+                                       min="{{ '1' if izdelek.enota == 'kos' else '0.5' }}"
+                                       step="{{ '1' if izdelek.enota == 'kos' else '0.5' }}"
+                                       max="{{ izdelek.zaloga|kolicina|replace(',', '.') }}" required>
+                            </div>
+
+                            <div class="gumbi">
+                                <button type="submit">Dodaj v košarico</button>
+                            </div>
+                        </form>
+                        {% elif izdelek.zaloga <= 0 %}
+                        <p>Izdelka trenutno ni na zalogi.</p>
+                        {% endif %}
+
+                        <p>Plačilo ob prevzemu na kmetiji.</p>
+                    </div>
+
+                    <div class="kmetija-okvir">
+                        <h3>Kmetija in osebni prevzem</h3>
+                        <p><a href="/kmetije/{{ izdelek.kmetija.id }}">{{ izdelek.kmetija.naziv }}</a></p>
+                        <p>{{ izdelek.kmetija.naslov }}, {{ izdelek.kmetija.kraj.naziv }}</p>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    </body>
+</html>

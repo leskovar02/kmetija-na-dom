@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Prejeta naročila - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <a href="/odjava">Odjava</a>
+            </nav>
+        </header>
+
+        <div class="postavitev">
+            <nav class="stranski-meni">
+                <h2>Moja kmetija</h2>
+                <ul>
+                    <li><a href="/kmetije/{{ current_user.kmetija.id }}">Javni profil</a></li>
+                    <li><a href="/inventar">Inventar</a></li>
+                    <li><a href="/kmetovalec/narocila">Naročila</a></li>
+                </ul>
+            </nav>
+
+            <main class="vsebina">
+                <h2>Prejeta naročila</h2>
+
+                {% with sporocila = get_flashed_messages() %}
+                {% if sporocila %}
+                <div class="sporocilo">
+                    {% for sporocilo in sporocila %}
+                    <p>{{ sporocilo }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <div class="filtri-okvir">
+                    <form id="filter-stanja" action="/kmetovalec/narocila" method="get">
+                        <div class="polje">
+                            <label for="stanje">Stanje</label>
+                            <select id="stanje" name="stanje">
+                                <option value="">Vsa stanja</option>
+                                {% for vrednost, ime in STANJA_IMENA.items() %}
+                                <option value="{{ vrednost }}" {% if stanje == vrednost %}selected{% endif %}>{{ ime }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="gumbi">
+                            <button type="submit">Filtriraj</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="tabela-okvir">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Naročilo</th>
+                                <th>Kupec</th>
+                                <th>Oddano</th>
+                                <th>Izdelki</th>
+                                <th>Znesek</th>
+                                <th>Stanje</th>
+                                <th>Dejanje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for narocilo in narocila %}
+                            <tr>
+                                <td>{{ narocilo.id }}</td>
+                                <td>{{ narocilo.kupec.ime }} {{ narocilo.kupec.priimek }}</td>
+                                <td>{{ narocilo.datum_narocila|datum }}</td>
+                                <td>{% for postavka in narocilo.postavke %}{{ postavka.izdelek.naziv }} ({{ postavka.kolicina|kolicina }} {{ postavka.izdelek.enota }}){% if not loop.last %}, {% endif %}{% endfor %}</td>
+                                <td>{{ narocilo.skupni_znesek|evro }} €</td>
+                                <td>{{ STANJA_IMENA[narocilo.status] }}</td>
+                                <td><a href="/kmetovalec/narocila/{{ narocilo.id }}">Podrobnosti</a></td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7">Ni prejetih naročil.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="obvestilo">Potek stanj: čaka na potrditev → potrjeno / zavrnjeno → v pripravi → za prevzem → zaprto.</p>
+            </main>
+        </div>
+    </body>
+</html>

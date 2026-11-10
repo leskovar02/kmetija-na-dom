@@ -1,0 +1,438 @@
+/* osnova */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: system-ui, sans-serif;
+    line-height: 1.4;
+}
+
+h1, h2, h3, h4 {
+    margin: 0 0 8px;
+}
+
+p {
+    margin: 0 0 8px;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    object-fit: cover;
+}
+
+button {
+    padding: 6px 14px;
+    cursor: pointer;
+}
+
+input, select, textarea {
+    padding: 6px 8px;
+    font: inherit;
+}
+
+/* glava in meni */
+.glava {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid #ccc;
+}
+
+.glava h1 {
+    margin: 0;
+}
+
+.glava-meni ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.glava-meni a {
+    text-decoration: none;
+}
+
+.glava-meni a:hover {
+    text-decoration: underline;
+}
+
+/* vsebina */
+.vsebina {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.vsebina:has(.prijava-okvir),
+.vsebina:has(.registracija-obrazec-okvir) {
+    align-items: center;
+    justify-content: center;
+}
+
+.vsebina-glava,
+.izdelek-glava {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.vsebina-glava h2,
+.izdelek-glava h2 {
+    margin: 0;
+}
+
+/* stranski meni kmetovalca */
+.postavitev {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+}
+
+.postavitev .vsebina {
+    margin: 0;
+}
+
+.stranski-meni {
+    min-width: 200px;
+    padding: 24px;
+    border-right: 1px solid #ccc;
+    align-self: stretch;
+}
+
+.stranski-meni ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* sporočila */
+.sporocilo,
+.obvestilo {
+    padding: 12px 16px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
+}
+
+.sporocilo ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.sporocilo p:last-child {
+    margin: 0;
+}
+
+/* obrazci */
+.polje {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+fieldset.polje,
+.kmetija-podatki {
+    padding: 12px 16px;
+    border: 1px solid #ccc;
+}
+
+.izbira {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vrstica {
+    display: flex;
+    gap: 16px;
+}
+
+.vrstica .polje {
+    flex: 1;
+}
+
+.gumbi {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+/* okvirji */
+.prijava-okvir,
+.registracija-obrazec-okvir,
+.filtri-okvir,
+.nakup-okvir,
+.kmetija-okvir,
+.opis-okvir,
+.povzetek-okvir,
+.stanje-okvir,
+.kupec-okvir,
+.postavke-okvir,
+.lokacija-okvir,
+.ocena-okvir,
+.potrditev-okvir,
+.prevzem-okvir,
+.osnovni-podatki,
+.slika-izdelka,
+.kmetija-profil,
+.kmetija-ponudba,
+.kmetija-ocene,
+.tabela-okvir {
+    padding: 16px;
+    border: 1px solid #ccc;
+}
+
+.prijava-okvir,
+.registracija-obrazec-okvir {
+    width: 100%;
+    max-width: 420px;
+}
+
+.registracija-okvir,
+.prijava-povezava-okvir {
+    width: 100%;
+    max-width: 420px;
+}
+
+.registracija-okvir button,
+.prijava-povezava-okvir button {
+    width: 100%;
+}
+
+/* podatki kmetije pri registraciji */
+.registracija-obrazec-okvir:not(:has(#vloga-kmetovalec:checked)) .kmetija-podatki {
+    display: none;
+}
+
+/* postavitve v dveh stolpcih */
+.katalog-postavitev,
+.izdelek-postavitev,
+.kosarica-postavitev,
+.narocilo-postavitev,
+.obrazec-postavitev {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.filtri-okvir {
+    flex: 0 0 260px;
+}
+
+.rezultati-okvir,
+.kosarica-kmetije,
+.narocilo-vsebina,
+.osnovni-podatki,
+.izdelek-podatki {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.nakup-stolpec,
+.povzetek-okvir,
+.stanje-okvir,
+.slika-izdelka {
+    flex: 0 0 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* seznami z ločilno črto */
+.izdelek-kartica,
+.kmetija-kartica,
+.ocena,
+.narocilo-blok,
+.kmetija-blok {
+    padding: 16px 0;
+}
+
+.izdelek-kartica + .izdelek-kartica,
+.kmetija-kartica + .kmetija-kartica,
+.ocena + .ocena,
+.narocilo-blok + .narocilo-blok,
+.kmetija-blok + .kmetija-blok {
+    border-top: 1px solid #ccc;
+}
+
+.izdelek-kartica {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    column-gap: 16px;
+}
+
+.izdelek-kartica img {
+    grid-row: span 5;
+    width: 140px;
+    height: 105px;
+}
+
+.cena,
+.skupaj,
+.vmesna-vsota {
+    font-weight: bold;
+}
+
+/* tabele */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+thead th {
+    border-bottom: 2px solid #999;
+}
+
+tbody tr + tr td {
+    border-top: 1px solid #ccc;
+}
+
+td form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+td input[type="number"] {
+    width: 80px;
+}
+
+.dejanja {
+    display: flex;
+    gap: 12px;
+}
+
+/* podatki v obliki seznama */
+dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 16px;
+    margin: 0 0 8px;
+}
+
+dd {
+    margin: 0;
+}
+
+/* vstopna stran */
+body:has(.vstopna-ozadje) {
+    background: #000;
+}
+
+.vstopna-ozadje {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: url("/img/vstopna_bg.png") center / cover no-repeat;
+    animation: pojavitev 0.75s ease-in both;
+}
+
+@keyframes pojavitev {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.vstopna-ozadje::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.vstopna {
+    color: #fff;
+}
+
+.vstopna {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 16px;
+    text-align: center;
+}
+
+.glava-vstopna h1 {
+    margin: 0;
+}
+
+.vstopna-okvir {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    max-width: 600px;
+}
+
+.vstopna-okvir p {
+    margin: 0;
+}
+
+/* ozki zasloni */
+@media (max-width: 800px) {
+    .postavitev,
+    .katalog-postavitev,
+    .izdelek-postavitev,
+    .kosarica-postavitev,
+    .narocilo-postavitev,
+    .obrazec-postavitev {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .stranski-meni {
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .filtri-okvir,
+    .nakup-stolpec,
+    .povzetek-okvir,
+    .stanje-okvir,
+    .slika-izdelka {
+        flex: none;
+    }
+
+    .tabela-okvir {
+        overflow-x: auto;
+    }
+}

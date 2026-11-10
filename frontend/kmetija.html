@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>{{ kmetija.naziv }} - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    {% if current_user.vloga == "kmetovalec" %}
+                    <li><a href="/kmetije/{{ current_user.kmetija.id }}">Javni profil</a></li>
+                    <li><a href="/inventar">Inventar</a></li>
+                    <li><a href="/kmetovalec/narocila">Naročila</a></li>
+                    {% else %}
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    {% endif %}
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            {% with sporocila = get_flashed_messages() %}
+            {% if sporocila %}
+            <div class="sporocilo">
+                {% for sporocilo in sporocila %}
+                <p>{{ sporocilo }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <section class="kmetija-profil">
+                <h2>{{ kmetija.naziv }}</h2>
+
+                <div class="kmetija-podatki">
+                    <dl>
+                        <dt>Naslov</dt>
+                        <dd>{{ kmetija.naslov }}, {{ kmetija.kraj.naziv }}</dd>
+                        <dt>Tip</dt>
+                        <dd>{{ {"ekoloska": "Ekološka", "integrirana": "Integrirana", "mesana": "Mešana"}[kmetija.tip] }}</dd>
+                        {% if kmetija.informacije %}
+                        <dt>Informacije</dt>
+                        <dd>{{ kmetija.informacije }}</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+
+                <div class="povprecna-ocena">
+                    <h3>Povprečna ocena</h3>
+                    {% if stevilo_ocen > 0 %}
+                    <p>{{ "%.1f"|format(povprecna_ocena)|replace(".", ",") }} / 5 ({{ stevilo_ocen }} {{ "ocena" if stevilo_ocen % 100 == 1 else "oceni" if stevilo_ocen % 100 == 2 else "ocene" if stevilo_ocen % 100 in (3, 4) else "ocen" }})</p>
+                    {% else %}
+                    <p>Kmetija še nima ocen.</p>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="kmetija-ponudba">
+                <h3>Ponudba</h3>
+                <form action="/izdelki" method="get">
+                    <input type="hidden" name="kmetija_id" value="{{ kmetija.id }}">
+                    <button type="submit">Brskaj po artiklih</button>
+                </form>
+            </section>
+
+            <section class="kmetija-ocene">
+                <h3>Ocene kupcev</h3>
+                <div class="ocene-seznam">
+                    {% for ocena in ocene %}
+                    <article class="ocena">
+                        <p class="ocena-avtor">{{ ocena.kupec.ime }}</p>
+                        <p class="ocena-vrednost">{{ ocena.ocena }} / 5</p>
+                        <p class="ocena-datum">{{ ocena.datum|datum }}</p>
+                        <p class="ocena-komentar">{{ ocena.komentar }}</p>
+                    </article>
+                    {% else %}
+                    <p>Kmetija še nima ocen.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

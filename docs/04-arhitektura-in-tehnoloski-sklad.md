@@ -24,7 +24,7 @@ Uporabniške seje se upravljajo preko Session-based authentication s piškotki v
 
 ### Lokalni zagon
 
-Aplikacija se lokalno zažene preko Docker.
+Aplikacija se lokalno zažene preko Docker Compose z ukazom `docker compose up`. Zaganja tri vsebnike, opredeljene v `docker-compose.yml`: podatkovno bazo (`db`), Flask zaledje (`backend`) in spletni vmesnik (`frontend`).
 
 ## Tehnološki sklad
 

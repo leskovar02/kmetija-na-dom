@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Oceni nakup - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            <div class="ocena-okvir">
+                <h2>Oceni nakup</h2>
+
+                {% if napake %}
+                <div class="sporocilo">
+                    <ul>
+                        {% for napaka in napake %}
+                        <li>{{ napaka }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div class="narocilo-povzetek">
+                    <dl>
+                        <dt>Naročilo</dt>
+                        <dd>{{ narocilo.id }}</dd>
+                        <dt>Kmetija</dt>
+                        <dd><a href="/kmetije/{{ narocilo.kmetija.id }}">{{ narocilo.kmetija.naziv }}</a></dd>
+                        <dt>Zaprto</dt>
+                        <dd>{{ narocilo.datum_zaprtja|datum if narocilo.datum_zaprtja else "Še ni zaprto" }}</dd>
+                    </dl>
+                </div>
+
+                {% if razlog %}
+                <div class="sporocilo">
+                    <p>Naročila (še) ni mogoče oceniti: {{ razlog }}</p>
+                </div>
+                {% else %}
+                <form id="ocena-obrazec" action="/narocila/{{ narocilo.id }}/ocena" method="post">
+                    <fieldset class="polje">
+                        <legend>Ocena</legend>
+
+                        <div class="izbira">
+                            <input type="radio" id="ocena-1" name="ocena" value="1" required>
+                            <label for="ocena-1">1</label>
+                        </div>
+                        <div class="izbira">
+                            <input type="radio" id="ocena-2" name="ocena" value="2">
+                            <label for="ocena-2">2</label>
+                        </div>
+                        <div class="izbira">
+                            <input type="radio" id="ocena-3" name="ocena" value="3">
+                            <label for="ocena-3">3</label>
+                        </div>
+                        <div class="izbira">
+                            <input type="radio" id="ocena-4" name="ocena" value="4">
+                            <label for="ocena-4">4</label>
+                        </div>
+                        <div class="izbira">
+                            <input type="radio" id="ocena-5" name="ocena" value="5">
+                            <label for="ocena-5">5</label>
+                        </div>
+                    </fieldset>
+
+                    <div class="polje">
+                        <label for="komentar">Komentar</label>
+                        <textarea id="komentar" name="komentar" rows="4" required></textarea>
+                    </div>
+
+                    <p class="obvestilo">Ocena in komentar bosta javno vidna na profilu kmetije. Vsako naročilo lahko ocenite samo enkrat.</p>
+
+                    <div class="gumbi">
+                        <button type="submit">Oddaj oceno</button>
+                    </div>
+                </form>
+                {% endif %}
+
+                <div class="preklici-okvir">
+                    <form action="/narocila" method="get">
+                        <button type="submit">Prekliči</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

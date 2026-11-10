@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Naročilo oddano - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            <div class="potrditev-glava">
+                <h2>Naročilo je oddano</h2>
+                <p>Kmetija bo naročilo pregledala in ga potrdila ali zavrnila. Stanje naročila spremljate pod "Moja naročila".</p>
+            </div>
+
+            <section class="narocila-povzetek">
+                {% for narocilo in narocila %}
+                <article class="narocilo-blok">
+                    <h3>Naročilo št. {{ narocilo.id }}</h3>
+
+                    <dl class="narocilo-podatki">
+                        <dt>Kmetija</dt>
+                        <dd>{{ narocilo.kmetija.naziv }}</dd>
+                        <dt>Oddano</dt>
+                        <dd>{{ narocilo.datum_narocila|datum }}</dd>
+                        <dt>Stanje</dt>
+                        <dd>{{ STANJA_IMENA[narocilo.status] }}</dd>
+                    </dl>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Izdelek</th>
+                                <th>Količina</th>
+                                <th>Cena / enota</th>
+                                <th>Skupaj</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for postavka in narocilo.postavke %}
+                            <tr>
+                                <td>{{ postavka.izdelek.naziv }}</td>
+                                <td>{{ postavka.kolicina|kolicina }} {{ postavka.izdelek.enota }}</td>
+                                <td>{{ postavka.cena|evro }} €</td>
+                                <td>{{ (postavka.cena * postavka.kolicina)|evro }} €</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <p class="skupaj">Skupni znesek: {{ narocilo.skupni_znesek|evro }} €</p>
+
+                    <div class="prevzem-okvir">
+                        <h4>Podatki o prevzemu</h4>
+                        <p>{{ narocilo.kmetija.naziv }}, {{ narocilo.kmetija.naslov }}, {{ narocilo.kmetija.kraj.naziv }}</p>
+                        <p>Plačilo ob prevzemu. Na prevzem pridite, ko kmetija naročilo označi kot "za prevzem".</p>
+                    </div>
+                </article>
+                {% endfor %}
+            </section>
+
+            <div class="gumbi">
+                <form action="/narocila" method="get">
+                    <button type="submit">Moja naročila</button>
+                </form>
+
+                <form action="/izdelki" method="get">
+                    <button type="submit">Nadaljuj z nakupovanjem</button>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>

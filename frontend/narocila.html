@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Moja naročila - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            <h2>Moja naročila</h2>
+
+            {% with sporocila = get_flashed_messages() %}
+            {% if sporocila %}
+            <div class="sporocilo">
+                {% for sporocilo in sporocila %}
+                <p>{{ sporocilo }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <div class="tabela-okvir">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Naročilo</th>
+                            <th>Kmetija</th>
+                            <th>Oddano</th>
+                            <th>Izdelki</th>
+                            <th>Znesek</th>
+                            <th>Stanje</th>
+                            <th>Prevzem</th>
+                            <th>Ocena</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for narocilo in narocila %}
+                        <tr>
+                            <td>{{ narocilo.id }}</td>
+                            <td><a href="/kmetije/{{ narocilo.kmetija.id }}">{{ narocilo.kmetija.naziv }}</a></td>
+                            <td>{{ narocilo.datum_narocila|datum }}</td>
+                            <td>{% for postavka in narocilo.postavke %}{{ postavka.izdelek.naziv }} ({{ postavka.kolicina|kolicina }} {{ postavka.izdelek.enota }}){% if not loop.last %}, {% endif %}{% endfor %}</td>
+                            <td>{{ narocilo.skupni_znesek|evro }} €</td>
+                            <td>{{ STANJA_IMENA[narocilo.status] }}</td>
+                            <td>{{ narocilo.kmetija.naslov }}, {{ narocilo.kmetija.kraj.naziv }}</td>
+                            <td>
+                                {% if narocilo.ocena %}
+                                {{ narocilo.ocena.ocena }} / 5
+                                {% elif narocilo.id in lahko_oceni %}
+                                <a href="/narocila/{{ narocilo.id }}/ocena">Oceni nakup</a>
+                                {% elif narocilo.status == "zaprto" %}
+                                Oceniti je mogoče 24 ur po zaprtju.
+                                {% else %}
+                                –
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8">Še nimate naročil.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="obvestilo">Potek stanj: čaka na potrditev → potrjeno / zavrnjeno → v pripravi → za prevzem → zaprto. Na prevzem pridite, ko je naročilo v stanju "za prevzem".</p>
+        </main>
+    </body>
+</html>

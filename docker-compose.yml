@@ -1,11 +1,11 @@
-version: '3.8'
-
 services:
-  # POSTGES
+  # baza #
   db:
     image: postgres:15-alpine
     container_name: kmetija_db
     restart: always
+    # slovenski čas #
+    command: postgres -c timezone=Europe/Ljubljana
     environment:
       POSTGRES_USER: user_kmetija
       POSTGRES_PASSWORD: geslo_kmetija
@@ -15,7 +15,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  # FLASK
+  # flask #
   backend:
     build: ./backend
     container_name: kmetija_backend
@@ -24,10 +24,18 @@ services:
       - "5000:5000"
     environment:
       - DATABASE_URL=postgresql://user_kmetija:geslo_kmetija@db:5432/kmetija_db
+      - SECRET_KEY=razvojni_kljuc_kmetija_spremeni_me
+      - FRONTEND_DIR=/app/frontend
+      - SLIKE_DIR=/app/slike
+    volumes:
+      # predloge #
+      - ./frontend:/app/frontend:ro
+      # slike izdelkov #
+      - slike_izdelkov:/app/slike
     depends_on:
       - db
 
-  # WEBAPP
+  # nginx #
   frontend:
     build: ./frontend
     container_name: kmetija_frontend
@@ -39,3 +47,4 @@ services:
 
 volumes:
   postgres_data:
+  slike_izdelkov:

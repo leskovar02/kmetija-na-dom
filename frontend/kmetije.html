@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Kmetije - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            <div class="vsebina-glava">
+                <h2>Kmetije</h2>
+                <form action="/izdelki" method="get">
+                    <button type="submit">Iskanje po izdelkih</button>
+                </form>
+            </div>
+
+            <div class="lokacija-okvir">
+                <form id="lokacija-filter" action="/kmetije" method="get">
+                    <div class="polje">
+                        <label for="kraj">Začetna lokacija (najbližji večji kraj)</label>
+                        <select id="kraj" name="kraj_id" required>
+                            <option value="">Izberite kraj</option>
+                            {% for kraj in kraji %}
+                            <option value="{{ kraj.id }}" {% if izbran_kraj and izbran_kraj.id == kraj.id %}selected{% endif %}>{{ kraj.naziv }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="gumbi">
+                        <button type="submit">Razvrsti po oddaljenosti</button>
+                    </div>
+                </form>
+            </div>
+
+            <section class="kmetije-seznam">
+                {% if izbran_kraj %}
+                <p>Kmetije, razvrščene po oddaljenosti od kraja {{ izbran_kraj.naziv }}.</p>
+                {% endif %}
+
+                {% for kmetija in kmetije %}
+                <article class="kmetija-kartica">
+                    <h3>{{ kmetija.naziv }}</h3>
+                    <p class="naslov">{{ kmetija.naslov }}, {{ kmetija.kraj.naziv }}</p>
+                    {% if kmetija.kraj_id in razdalje %}
+                    <p class="oddaljenost">{{ razdalje[kmetija.kraj_id]|round|int }} km</p>
+                    {% endif %}
+                    {% if kmetija.id in ocene %}
+                    {% set povprecje, stevilo = ocene[kmetija.id] %}
+                    <p class="ocena">Ocena: {{ "%.1f"|format(povprecje)|replace(".", ",") }} / 5 ({{ stevilo }})</p>
+                    {% else %}
+                    <p class="ocena">Še brez ocen</p>
+                    {% endif %}
+                    {% if kmetija.informacije %}
+                    <p class="informacije">{{ kmetija.informacije }}</p>
+                    {% endif %}
+                    <a href="/kmetije/{{ kmetija.id }}">Poglej kmetijo</a>
+                </article>
+                {% else %}
+                <p>Ni najdenih kmetij.</p>
+                {% endfor %}
+            </section>
+        </main>
+    </body>
+</html>

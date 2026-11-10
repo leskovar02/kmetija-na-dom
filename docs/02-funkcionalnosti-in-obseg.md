@@ -48,7 +48,7 @@
 
 4) __[MVP + DS]__ Oddaja naročila
 
-5) __[MVP]__ Pregled in spreminjanje statusa naročil s strani kmetovalca (potrjeno, v pripravi, za prevzem, zaprto)
+5) __[MVP]__ Pregled in spreminjanje statusa naročil s strani kmetovalca (čaka na potrditev → potrjeno / zavrnjeno → v pripravi → za prevzem → zaprto)
 
 6) __[MVP]__ Sistem ocenjevanja kupljenih izdelkov in kmetij
 

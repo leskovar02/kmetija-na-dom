@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Naročilo - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <a href="/odjava">Odjava</a>
+            </nav>
+        </header>
+
+        <div class="postavitev">
+            <nav class="stranski-meni">
+                <h2>Moja kmetija</h2>
+                <ul>
+                    <li><a href="/kmetije/{{ current_user.kmetija.id }}">Javni profil</a></li>
+                    <li><a href="/inventar">Inventar</a></li>
+                    <li><a href="/kmetovalec/narocila">Naročila</a></li>
+                </ul>
+            </nav>
+
+            <main class="vsebina">
+                <div class="vsebina-glava">
+                    <h2>Naročilo št. {{ narocilo.id }}</h2>
+                    <a href="/kmetovalec/narocila">Nazaj na naročila</a>
+                </div>
+
+                {% with sporocila = get_flashed_messages() %}
+                {% if sporocila %}
+                <div class="sporocilo">
+                    {% for sporocilo in sporocila %}
+                    <p>{{ sporocilo }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <div class="narocilo-postavitev">
+                    <section class="narocilo-vsebina">
+                        <div class="kupec-okvir">
+                            <h3>Kupec</h3>
+                            <dl>
+                                <dt>Ime in priimek</dt>
+                                <dd>{{ narocilo.kupec.ime }} {{ narocilo.kupec.priimek }}</dd>
+                                <dt>E-pošta</dt>
+                                <dd>{{ narocilo.kupec.email }}</dd>
+                                <dt>Oddano</dt>
+                                <dd>{{ narocilo.datum_narocila|datum }}</dd>
+                                {% if narocilo.datum_zaprtja %}
+                                <dt>Zaprto</dt>
+                                <dd>{{ narocilo.datum_zaprtja|datum }}</dd>
+                                {% endif %}
+                            </dl>
+                        </div>
+
+                        <div class="postavke-okvir">
+                            <h3>Naročeni izdelki</h3>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Izdelek</th>
+                                        <th>Količina</th>
+                                        <th>Cena / enota</th>
+                                        <th>Skupaj</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for postavka in narocilo.postavke %}
+                                    <tr>
+                                        <td>{{ postavka.izdelek.naziv }}</td>
+                                        <td>{{ postavka.kolicina|kolicina }} {{ postavka.izdelek.enota }}</td>
+                                        <td>{{ postavka.cena|evro }} €</td>
+                                        <td>{{ (postavka.cena * postavka.kolicina)|evro }} €</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <p class="skupaj">Skupni znesek: {{ narocilo.skupni_znesek|evro }} €</p>
+                        </div>
+                    </section>
+
+                    <aside class="stanje-okvir">
+                        <h3>Stanje naročila</h3>
+                        <p class="trenutno-stanje">Trenutno stanje: {{ STANJA_IMENA[narocilo.status] }}</p>
+
+                        {% if prehodi %}
+                        <form id="sprememba-stanja" action="/kmetovalec/narocila/{{ narocilo.id }}/stanje" method="post">
+                            <div class="gumbi">
+                                {% for vrednost, napis in prehodi %}
+                                <button type="submit" name="stanje" value="{{ vrednost }}">{{ napis }}</button>
+                                {% endfor %}
+                            </div>
+                        </form>
+                        {% else %}
+                        <p>Naročilo je zaključeno.</p>
+                        {% endif %}
+
+                        <p class="obvestilo">Potek stanj: čaka na potrditev → potrjeno / zavrnjeno → v pripravi → za prevzem → zaprto.</p>
+                    </aside>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

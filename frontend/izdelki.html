@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Izdelki - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            <div class="vsebina-glava">
+                <h2>Katalog izdelkov</h2>
+                <form action="/kmetije" method="get">
+                    <button type="submit">Iskanje po kmetijah</button>
+                </form>
+            </div>
+
+            <div class="katalog-postavitev">
+                <aside class="filtri-okvir">
+                    <form id="filtri" action="/izdelki" method="get">
+                        <h3>Filtri</h3>
+
+                        {% if izbrana_kmetija %}
+                        <input type="hidden" name="kmetija_id" value="{{ izbrana_kmetija.id }}">
+                        {% endif %}
+
+                        <div class="polje">
+                            <label for="iskanje">Iskanje</label>
+                            <input type="search" id="iskanje" name="iskanje" value="{{ filtri.iskanje }}">
+                        </div>
+
+                        <div class="polje">
+                            <label for="kategorija">Kategorija</label>
+                            <select id="kategorija" name="kategorija">
+                                <option value="">Vse kategorije</option>
+                                {% for vrednost, ime in KATEGORIJE_IMENA.items() %}
+                                <option value="{{ vrednost }}" {% if filtri.kategorija == vrednost %}selected{% endif %}>{{ ime }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="polje">
+                            <label for="tip">Tip kmetije</label>
+                            <select id="tip" name="tip">
+                                <option value="">Vsi tipi</option>
+                                {% for vrednost, ime in [("ekoloska", "Ekološka"), ("integrirana", "Integrirana"), ("mesana", "Mešana")] %}
+                                <option value="{{ vrednost }}" {% if filtri.tip == vrednost %}selected{% endif %}>{{ ime }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="vrstica">
+                            <div class="polje">
+                                <label for="cena-od">Cena od (€)</label>
+                                <input type="number" id="cena-od" name="cena_od" min="0" step="0.01" value="{{ filtri.cena_od }}">
+                            </div>
+
+                            <div class="polje">
+                                <label for="cena-do">Cena do (€)</label>
+                                <input type="number" id="cena-do" name="cena_do" min="0" step="0.01" value="{{ filtri.cena_do }}">
+                            </div>
+                        </div>
+
+                        <div class="polje">
+                            <label for="kraj">Moj kraj</label>
+                            <select id="kraj" name="kraj_id">
+                                <option value="">Izberite kraj</option>
+                                {% for kraj in kraji %}
+                                <option value="{{ kraj.id }}" {% if filtri.kraj_id == kraj.id|string %}selected{% endif %}>{{ kraj.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="polje">
+                            <label for="oddaljenost">Oddaljenost</label>
+                            <select id="oddaljenost" name="oddaljenost">
+                                <option value="">Katerakoli</option>
+                                {% for km in ["10", "20", "50", "100"] %}
+                                <option value="{{ km }}" {% if filtri.oddaljenost == km %}selected{% endif %}>Do {{ km }} km</option>
+                                {% endfor %}
+                            </select>
+                            <small>Oddaljenost upošteva le, če je izbran kraj.</small>
+                        </div>
+
+                        <div class="gumbi">
+                            <button type="submit">Uporabi filtre</button>
+                            <a href="/izdelki">Počisti</a>
+                        </div>
+                    </form>
+                </aside>
+
+                <section class="rezultati-okvir">
+                    <div class="rezultati-glava">
+                        {% if izbrana_kmetija %}
+                        <p>Ponudba kmetije <a href="/kmetije/{{ izbrana_kmetija.id }}">{{ izbrana_kmetija.naziv }}</a> · <a href="/izdelki">Prikaži vse izdelke</a></p>
+                        {% endif %}
+                        <p>Najdenih izdelkov: {{ izdelki|length }}</p>
+                    </div>
+
+                    <div class="izdelki-seznam">
+                        {% for izdelek in izdelki %}
+                        <article class="izdelek-kartica">
+                            <img src="/slike/{{ izdelek.slika }}" alt="{{ izdelek.naziv }}" width="200" height="150">
+                            <h3>{{ izdelek.naziv }}</h3>
+                            <p class="kmetija">
+                                {{ izdelek.kmetija.naziv }}
+                                {% if izdelek.kmetija.kraj_id in razdalje %} · {{ razdalje[izdelek.kmetija.kraj_id]|round|int }} km{% endif %}
+                            </p>
+                            <p class="cena">{{ izdelek.cena|evro }} € / {{ izdelek.enota }}</p>
+                            <a href="/izdelki/{{ izdelek.id }}">Poglej izdelek</a>
+                        </article>
+                        {% else %}
+                        <div class="ni-rezultatov">
+                            <p>Ni izdelkov, ki bi ustrezali izbranim filtrom.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </main>
+    </body>
+</html>
