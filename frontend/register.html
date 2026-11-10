@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Registracija - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+        </header>
+        <main class="vsebina">
+            <div class="registracija-obrazec-okvir">
+                <form id="registracijski-obrazec" action="/registracija" method="post">
+                    <h2>Registracija</h2>
+
+                    {% if napake %}
+                    <div class="sporocilo">
+                        <ul>
+                            {% for napaka in napake %}
+                            <li>{{ napaka }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <div class="polje">
+                        <label for="ime">Ime</label>
+                        <input type="text" id="ime" name="ime" value="{{ podatki.ime }}" required>
+                    </div>
+
+                    <div class="polje">
+                        <label for="priimek">Priimek</label>
+                        <input type="text" id="priimek" name="priimek" value="{{ podatki.priimek }}" required>
+                    </div>
+
+                    <div class="polje">
+                        <label for="email">E-poštni naslov</label>
+                        <input type="email" id="email" name="email" value="{{ podatki.email }}" required>
+                    </div>
+
+                    <div class="polje">
+                        <label for="geslo">Geslo</label>
+                        <input type="password" id="geslo" name="geslo" required>
+                    </div>
+
+                    <fieldset class="polje">
+                        <legend>Vloga</legend>
+
+                        <div class="izbira">
+                            <input type="radio" id="vloga-kupec" name="vloga" value="kupec" required
+                                   {% if podatki.vloga == "kupec" %}checked{% endif %}>
+                            <label for="vloga-kupec">Kupec</label>
+                        </div>
+
+                        <div class="izbira">
+                            <input type="radio" id="vloga-kmetovalec" name="vloga" value="kmetovalec"
+                                   {% if podatki.vloga == "kmetovalec" %}checked{% endif %}>
+                            <label for="vloga-kmetovalec">Kmetovalec</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="kmetija-podatki">
+                        <legend>Podatki kmetije (samo za kmetovalce)</legend>
+
+                        <div class="polje">
+                            <label for="naziv-kmetije">Naziv kmetije</label>
+                            <input type="text" id="naziv-kmetije" name="naziv_kmetije" value="{{ podatki.naziv_kmetije }}">
+                        </div>
+
+                        <div class="polje">
+                            <label for="naslov">Naslov kmetije (za prevzem)</label>
+                            <input type="text" id="naslov" name="naslov" value="{{ podatki.naslov }}">
+                        </div>
+
+                        <div class="polje">
+                            <label for="kraj">Najbližji večji kraj</label>
+                            <select id="kraj" name="kraj_id">
+                                <option value="">Izberite kraj</option>
+                                {% for kraj in kraji %}
+                                <option value="{{ kraj.id }}" {% if podatki.kraj_id == kraj.id|string %}selected{% endif %}>{{ kraj.naziv }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="polje">
+                            <label for="tip">Tip kmetije</label>
+                            <select id="tip" name="tip">
+                                <option value="">Izberite tip</option>
+                                <option value="ekoloska" {% if podatki.tip == "ekoloska" %}selected{% endif %}>Ekološka</option>
+                                <option value="integrirana" {% if podatki.tip == "integrirana" %}selected{% endif %}>Integrirana</option>
+                                <option value="mesana" {% if podatki.tip == "mesana" %}selected{% endif %}>Mešana</option>
+                            </select>
+                        </div>
+
+                        <div class="polje">
+                            <label for="informacije">Informacije (neobvezno, npr. sezona obratovanja)</label>
+                            <textarea id="informacije" name="informacije" rows="3">{{ podatki.informacije }}</textarea>
+                        </div>
+                    </fieldset>
+
+                    <div class="gumbi">
+                        <button type="submit">Registracija</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="prijava-povezava-okvir">
+                <form id="na-prijavo" action="/prijava" method="get">
+                    <button type="submit">Že imate račun? Prijava</button>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>

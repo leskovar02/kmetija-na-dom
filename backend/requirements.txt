@@ -1,0 +1,7 @@
+Flask
+Flask-Login
+Flask-Session
+psycopg2-binary
+SQLAlchemy
+Flask-SQLAlchemy
+bcrypt

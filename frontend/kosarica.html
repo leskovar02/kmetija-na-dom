@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Košarica - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <ul>
+                    <li><a href="/kmetije">Kmetije</a></li>
+                    <li><a href="/izdelki">Izdelki</a></li>
+                    <li><a href="/kosarica">Košarica</a></li>
+                    <li><a href="/narocila">Moja naročila</a></li>
+                    <li><a href="/odjava">Odjava</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="vsebina">
+            <h2>Košarica</h2>
+
+            {% with sporocila = get_flashed_messages() %}
+            {% if sporocila %}
+            <div class="sporocilo">
+                {% for sporocilo in sporocila %}
+                <p>{{ sporocilo }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {% if bloki %}
+            <p class="obvestilo">Prevzem in plačilo opravite osebno pri vsaki kmetiji posebej. Za vsako kmetijo se ustvari ločeno naročilo.</p>
+
+            <div class="kosarica-postavitev">
+                <section class="kosarica-kmetije">
+                    {% for blok in bloki %}
+                    <div class="kmetija-blok">
+                        <h3>{{ blok.kmetija.naziv }}</h3>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Izdelek</th>
+                                    <th>Cena / enota</th>
+                                    <th>Količina</th>
+                                    <th>Zaloga</th>
+                                    <th>Skupaj</th>
+                                    <th>Dejanje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for postavka in blok.postavke %}
+                                {% set izdelek = postavka.izdelek %}
+                                <tr>
+                                    <td><a href="/izdelki/{{ izdelek.id }}">{{ izdelek.naziv }}</a></td>
+                                    <td>{{ izdelek.cena|evro }} € / {{ izdelek.enota }}</td>
+                                    <td>
+                                        <form action="/kosarica/posodobi" method="post">
+                                            <input type="hidden" name="izdelek_id" value="{{ izdelek.id }}">
+                                            <input type="number" name="kolicina" value="{{ postavka.kolicina|kolicina|replace(',', '.') }}"
+                                                   min="0" step="{{ '1' if izdelek.enota == 'kos' else '0.5' }}"
+                                                   max="{{ izdelek.zaloga|kolicina|replace(',', '.') }}">
+                                            <button type="submit">Posodobi</button>
+                                        </form>
+                                    </td>
+                                    <td>{{ izdelek.zaloga|kolicina }} {{ izdelek.enota }}</td>
+                                    <td>{{ postavka.skupaj|evro }} €</td>
+                                    <td>
+                                        <form action="/kosarica/odstrani" method="post">
+                                            <input type="hidden" name="izdelek_id" value="{{ izdelek.id }}">
+                                            <button type="submit">Odstrani</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <p class="vmesna-vsota">Vmesna vsota: {{ blok.vmesna_vsota|evro }} €</p>
+                        <p class="prevzem">Prevzem: {{ blok.kmetija.naslov }}, {{ blok.kmetija.kraj.naziv }}</p>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <aside class="povzetek-okvir">
+                    <h3>Povzetek košarice</h3>
+                    {% for blok in bloki %}
+                    <p>{{ blok.kmetija.naziv }}: {{ blok.vmesna_vsota|evro }} €</p>
+                    {% endfor %}
+                    <p class="skupaj">Skupaj: {{ skupni_znesek|evro }} €</p>
+
+                    <p>Brez spletnega plačila. Znesek poravnate vsaki kmetiji ob prevzemu.</p>
+
+                    <form id="oddaj-narocilo" action="/narocilo/oddaj" method="post">
+                        <button type="submit">Oddaj naročilo</button>
+                    </form>
+
+                    <form action="/izdelki" method="get">
+                        <button type="submit">Nadaljuj z nakupovanjem</button>
+                    </form>
+                </aside>
+            </div>
+            {% else %}
+            <p>Košarica je prazna.</p>
+            <a href="/izdelki">Na katalog izdelkov</a>
+            {% endif %}
+        </main>
+    </body>
+</html>

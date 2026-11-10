@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Dodaj izdelek - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+            <nav class="glava-meni">
+                <a href="/odjava">Odjava</a>
+            </nav>
+        </header>
+
+        <div class="postavitev">
+            <nav class="stranski-meni">
+                <h2>Moja kmetija</h2>
+                <ul>
+                    <li><a href="/kmetije/{{ current_user.kmetija.id }}">Javni profil</a></li>
+                    <li><a href="/inventar">Inventar</a></li>
+                    <li><a href="/kmetovalec/narocila">Naročila</a></li>
+                </ul>
+            </nav>
+
+            <main class="vsebina">
+                <h2>Dodaj izdelek</h2>
+
+                {% if napake %}
+                <div class="sporocilo">
+                    <ul>
+                        {% for napaka in napake %}
+                        <li>{{ napaka }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <form id="izdelek-obrazec" action="/inventar/nov" method="post" enctype="multipart/form-data">
+                    <div class="obrazec-postavitev">
+                        <div class="osnovni-podatki">
+                            <h3>Osnovni podatki</h3>
+
+                            <div class="polje">
+                                <label for="naziv">Naziv izdelka</label>
+                                <input type="text" id="naziv" name="naziv" value="{{ podatki.naziv }}" required>
+                            </div>
+
+                            <div class="polje">
+                                <label for="kategorija">Kategorija</label>
+                                <select id="kategorija" name="kategorija" required>
+                                    <option value="">Izberite kategorijo</option>
+                                    {% for vrednost, ime in KATEGORIJE_IMENA.items() %}
+                                    <option value="{{ vrednost }}" {% if podatki.kategorija == vrednost %}selected{% endif %}>{{ ime }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="polje">
+                                <label for="opis">Opis</label>
+                                <textarea id="opis" name="opis" rows="4" required>{{ podatki.opis }}</textarea>
+                            </div>
+
+                            <div class="vrstica">
+                                <div class="polje">
+                                    <label for="cena">Cena (€)</label>
+                                    <input type="number" id="cena" name="cena" min="0" step="0.01" value="{{ podatki.cena }}" required>
+                                </div>
+
+                                <div class="polje">
+                                    <label for="enota">Enota količine</label>
+                                    <select id="enota" name="enota" required>
+                                        {% for enota in ["kg", "kos", "liter"] %}
+                                        <option value="{{ enota }}" {% if podatki.enota == enota %}selected{% endif %}>{{ enota }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="polje">
+                                <label for="zaloga">Začetna zaloga</label>
+                                <input type="number" id="zaloga" name="zaloga" min="0" step="any" value="{{ podatki.zaloga }}" required>
+                                <small>Za kg veljajo navedene količine kot zgornje meje ± 200 g.</small>
+                            </div>
+                        </div>
+
+                        <div class="slika-izdelka">
+                            <h3>Slika izdelka</h3>
+                            <div class="polje">
+                                <label for="slika">Naloži sliko</label>
+                                <input type="file" id="slika" name="slika" accept="image/png, image/jpeg" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gumbi">
+                        <button type="submit">Shrani izdelek</button>
+                    </div>
+                </form>
+
+                <div class="preklici-okvir">
+                    <form action="/inventar" method="get">
+                        <button type="submit">Prekliči</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

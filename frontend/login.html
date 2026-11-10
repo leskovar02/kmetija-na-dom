@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="sl">
+    <head>
+        <title>Prijava - Kmetija na dom</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+
+    </head>
+    <body>
+        <header class="glava">
+            <h1>Kmetija na dom</h1>
+        </header>
+        <main class="vsebina">
+            <div class="prijava-okvir">
+                <form id="prijavni-obrazec" action="/prijava" method="post">
+                    <h2>Prijava</h2>
+
+                    {% with sporocila = get_flashed_messages() %}
+                    {% if sporocila or napaka %}
+                    <div class="sporocilo">
+                        {% for sporocilo in sporocila %}
+                        <p>{{ sporocilo }}</p>
+                        {% endfor %}
+                        {% if napaka %}
+                        <p>{{ napaka }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endwith %}
+
+                    <input type="hidden" name="next" value="{{ naslednja or request.args.get('next', '') }}">
+
+                    <div class="polje">
+                        <label for="email">E-poštni naslov</label>
+                        <input type="email" id="email" name="email" value="{{ email or '' }}" required>
+                    </div>
+
+                    <div class="polje">
+                        <label for="geslo">Geslo</label>
+                        <input type="password" id="geslo" name="geslo" required>
+                    </div>
+
+                    <div class="gumbi">
+                        <button type="submit">Prijava</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="registracija-okvir">
+                <form id="registracija" action="/registracija" method="get">
+                    <button type="submit">Registracija</button>
+                </form>
+            </div>
+        </main>
+    </body>
+</html>
